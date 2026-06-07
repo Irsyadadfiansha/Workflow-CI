@@ -80,13 +80,21 @@ jobs:
         # Requires proper authentication setup
         print("✓ Artifacts ready for deployment")
         EOF
+
+    - name: Debug files
+      run: |
+        pwd
+        ls -lah
+        ls -lah MLProject
     
     - name: Build Docker image
       run: |
-        docker build -t ${{ env.IMAGE_NAME }}:latest \
-                     -t ${{ env.IMAGE_NAME }}:${{ github.sha }} \
-                     -f Dockerfile \
-                     .
+        ls -R
+        docker build \
+          -t ${{ env.IMAGE_NAME }}:latest \
+          -t ${{ env.IMAGE_NAME }}:${{ github.sha }} \
+          -f MLProject/Dockerfile \
+          MLProject
     
     - name: Log in to Docker Hub
       uses: docker/login-action@v2
