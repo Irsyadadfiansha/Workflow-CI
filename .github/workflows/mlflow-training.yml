@@ -56,19 +56,17 @@ jobs:
         MLFLOW_TRACKING_PASSWORD: ${{ secrets.DAGSHUB_TOKEN }}
           
     
-    - name: Get latest MLflow run_id
-      id: mlflow_run
+    - name: Get MLflow Run ID
       run: |
         pip install requests
-        python << 'EOF'
-        import requests
-        import json
-        
-        ls mlruns
-        runs = response.json().get('runs', [])
-        if runs:
-            latest_run_id = runs[0]['info']['run_id']
-            print(f"MLFLOW_RUN_ID={latest_run_id}")
+        python - << 'EOF'
+        import mlflow
+
+        run = mlflow.active_run()
+        if run:
+            print(f"MLFLOW_RUN_ID={run.info.run_id}")
+        else:
+            print("No active run found")
         EOF
     
     - name: Install Python dependencies for upload
