@@ -71,20 +71,44 @@ def train(data_path: str, experiment_name: str):
         run_id = mlflow.active_run().info.run_id
         logger.info(f"MLflow Run ID: {run_id}")
 
+def get_args():
+    parser = argparse.ArgumentParser()
+    
+    parser.add_argument("--data_path", type=str, required=True)
+    parser.add_argument("--experiment_name", type=str, default="heart-disease-basic")
+
+    return parser.parse_args()
 
 def main():
-    parser = argparse.ArgumentParser()
+    args = get_args()
 
-    parser.add_argument("--model_name", type=str, default="model")
-    parser.add_argument("--dagshub_owner", type=str, default="")
-    parser.add_argument("--dagshub_repo", type=str, default="")
+    mlflow.set_experiment(args.experiment_name)
 
-    args = parser.parse_args()
+    X_train, X_test, y_train, y_test = load_data(args.data_path)
 
-    train(args.data_path, args.experiment_name)
+    mlflow.sklearn.autolog()
 
-    logger.info("Training complete. Run: mlflow ui to view results")
+    with mlflow.start_run(run_name="RandomForest_autolog"):
+        model = RandomForestClassifier(
+            n_estimators=100,
+            max_depth=10,
+            random_state=RANDOM_STATE
+        )
 
+        model.fit(X_train, y_train)
+
+        y_pred = model.predict(X_test)
+
+        acc = accuracy_score(y_test, y_pred)
+        f1 = f1_score(y_test, y_pred)
+        auc = roc_auc_score(y_test, model.predict_proba(X_test)[:, 1])
+
+        logger.info(f"Accuracy: {acc:.4f}")
+        logger.info(f"F1 Score: {f1:.4f}")
+        logger.info(f"ROC-AUC: {auc:.4f}")
+
+        run_id = mlflow.active_run().info.run_id
+        logger.info(f"MLflow Run ID: {run_id}")
 
 if __name__ == "__main__":
     main()
