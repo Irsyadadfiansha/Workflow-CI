@@ -4,13 +4,11 @@ python_env: conda.yaml
 
 entry_points:
   main:
-    command: "python modelling.py --data_path {data_path} --model_name {model_name}"
-
     parameters:
       data_path:
-        description: "Path to preprocessed data"
-        default: "."
+        default: "heart_preprocessing/heart_preprocessed.csv"
 
-      model_name:
-        description: "Name of the model"
-        default: "heart_disease_model"
+      experiment_name:
+        default: "Heart-Disease-CI"
+
+    command: "python modelling.py --data_path {data_path} --experiment_name {experiment_name}"

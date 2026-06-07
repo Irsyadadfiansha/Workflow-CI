@@ -75,18 +75,9 @@ def train(data_path: str, experiment_name: str):
 def main():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument(
-        "--data_path",
-        type=str,
-        required=True,
-        help="Path to preprocessed dataset"
-    )
-
-    parser.add_argument(
-        "--experiment_name",
-        type=str,
-        default=EXPERIMENT_NAME
-    )
+    parser.add_argument("--model_name", type=str, default="model")
+    parser.add_argument("--dagshub_owner", type=str, default="")
+    parser.add_argument("--dagshub_repo", type=str, default="")
 
     args = parser.parse_args()
 
