@@ -53,7 +53,7 @@ jobs:
         cd MLProject
         mlflow run . \
           --env-manager local \
-          -P data_path=heart_disease_preprocess/heart_preprocessed.csv \
+          -P data_path=heart_preprocessing/heart_preprocessed.csv \
           -P experiment_name=Heart-Disease-CI \
           
     

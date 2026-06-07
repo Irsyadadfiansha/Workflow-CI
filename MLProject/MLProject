@@ -6,7 +6,7 @@ entry_points:
   main:
     parameters:
       data_path:
-        default: "heart_disease_preprocess/heart_preprocessed.csv"
+        default: "heart_preprocessing/heart_preprocessed.csv"
 
       experiment_name:
         default: "Heart-Disease-CI"
