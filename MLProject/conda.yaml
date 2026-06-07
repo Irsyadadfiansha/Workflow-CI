@@ -12,3 +12,4 @@ dependencies:
       - mlflow==2.19.0
       - dagshub==0.3.46
       - kagglehub==0.2.5
+
