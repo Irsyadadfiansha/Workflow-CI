@@ -40,33 +40,34 @@ def load_data(path: str):
 
 def main():
     mlflow.set_experiment(EXPERIMENT_NAME)
+    mlflow.sklearn.autolog()
 
     X_train, X_test, y_train, y_test = load_data(DATA_PATH)
 
-    # Enable autolog
-    mlflow.sklearn.autolog()
+    model = RandomForestClassifier(
+        n_estimators=100,
+        max_depth=10,
+        random_state=RANDOM_STATE
+    )
 
-    with mlflow.start_run(run_name="RandomForest_autolog"):
-        model = RandomForestClassifier(
-            n_estimators=100,
-            max_depth=10,
-            random_state=RANDOM_STATE
-        )
-        model.fit(X_train, y_train)
+    model.fit(X_train, y_train)
 
-        y_pred = model.predict(X_test)
-        acc = accuracy_score(y_test, y_pred)
-        f1 = f1_score(y_test, y_pred)
-        auc = roc_auc_score(y_test, model.predict_proba(X_test)[:, 1])
+    y_pred = model.predict(X_test)
 
-        logger.info(f"Accuracy: {acc:.4f}")
-        logger.info(f"F1 Score: {f1:.4f}")
-        logger.info(f"ROC-AUC:  {auc:.4f}")
+    acc = accuracy_score(y_test, y_pred)
+    f1 = f1_score(y_test, y_pred)
+    auc = roc_auc_score(y_test, model.predict_proba(X_test)[:, 1])
 
-        run_id = mlflow.active_run().info.run_id
-        logger.info(f"MLflow Run ID: {run_id}")
+    logger.info(f"Accuracy: {acc:.4f}")
+    logger.info(f"F1 Score: {f1:.4f}")
+    logger.info(f"ROC-AUC: {auc:.4f}")
 
-    logger.info("Training complete. Run: mlflow ui  to view results.")
+    run = mlflow.active_run()
+    if run:
+        logger.info(f"MLflow Run ID: {run.info.run_id}")
+    
+
+
 
 
 if __name__ == "__main__":
