@@ -55,8 +55,7 @@ jobs:
           --env-manager local \
           -P data_path=heart_disease_preprocess/heart_preprocessed.csv \
           -P experiment_name=Heart-Disease-CI \
-          -P dagshub_owner=$DAGSHUB_OWNER \
-          -P dagshub_repo=$DAGSHUB_REPO
+          
     
     - name: Get latest MLflow run_id
       id: mlflow_run
