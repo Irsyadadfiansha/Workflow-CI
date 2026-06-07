@@ -1,0 +1,14 @@
+name: HeartDiseasePipeline
+
+python_env: conda.yaml
+
+entry_points:
+  main:
+    command: "python modelling.py"
+    parameters:
+      - data_path:
+          description: "Path to preprocessed data"
+          default: "."
+      - model_name:
+          description: "Name of the model"
+          default: "heart_disease_model"
