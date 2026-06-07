@@ -2,7 +2,7 @@ name: heart-disease-ml
 channels:
   - conda-forge
 dependencies:
-  - python=3.12.7
+  - python=3.12
   - pip
   - pip:
     - pandas==2.0.3
