@@ -42,14 +42,20 @@ jobs:
         python -m pip install --upgrade pip
         pip install mlflow==2.19.0 pandas numpy scikit-learn dagshub kagglehub pyyaml
     
-    - name: Run MLflow Project
-      run: |
-        cd MLProject
-        mlflow run . --experiment-name "heart-disease-cicd" \
-          --backend local \
-          --run-id $(date +%s)
-      env:
-        MLFLOW_TRACKING_URI: "http://127.0.0.1:5000"
+    - name: Run mlflow project
+        env:
+          MLFLOW_TRACKING_USERNAME: ${{ secrets.DAGSHUB_USERNAME }}
+          MLFLOW_TRACKING_PASSWORD: ${{ secrets.DAGSHUB_TOKEN }}
+          DAGSHUB_OWNER: ${{ secrets.DAGSHUB_OWNER }}
+          DAGSHUB_REPO:  ${{ secrets.DAGSHUB_REPO }}
+        run: |
+          cd MLProject
+          mlflow run . \
+            --env-manager conda \
+            -P data_path=heart_preprocessing/heart_preprocessed.csv \
+            -P experiment_name=Heart-Disease-CI \
+            -P dagshub_owner=$DAGSHUB_OWNER \
+            -P dagshub_repo=$Druns"
     
     - name: Get latest MLflow run_id
       id: mlflow_run
@@ -59,7 +65,7 @@ jobs:
         import requests
         import json
         
-        response = requests.get("http://127.0.0.1:5000/api/2.0/mlflow/runs/search")
+        ls mlruns
         runs = response.json().get('runs', [])
         if runs:
             latest_run_id = runs[0]['info']['run_id']
